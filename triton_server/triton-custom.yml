@@ -1,12 +1,12 @@
-apiVersion: apps/v1            
-kind: Deployment               
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: triton-custom
-  namespace: triton 
+  namespace: monitoring
   labels:
-    app: triton-custom         
+    app: triton-custom
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: triton-custom
@@ -18,12 +18,12 @@ spec:
       volumes:
       - name: workspace
         hostPath:
-          path: /media/Data/bangpc/nfs_storage/triton_repo_new/triton_repo
+          path: /mnt/data/bangpc/test_triton
       - name: shm
         emptyDir:
           medium: Memory
         # nfs:
-        #   server: 192.168.0.231      
+        #   server: 192.168.0.231
         #   path: /media/Data/bangpc/nfs_volume/triton_repo/fd_repo
         #   readOnly: false
       containers:
@@ -34,15 +34,15 @@ spec:
           - containerPort: 8001
             name: grpc-triton
           - containerPort: 8002
-            name: metrics-triton            
-          image: "tritonserver:22.11-py3-custom" 
+            name: metrics-triton
+          image: "tritonserver:22.08-py3-custom"
           volumeMounts:
-          - mountPath: /workspace         
+          - mountPath: /workspace
             name: workspace
           - mountPath: /dev/shm
             name: shm
-              #command: ["/bin/sh", "-c"]      
-          args: ["cd /workspace/ ; /opt/tritonserver/bin/tritonserver --model-repository=/workspace/triton_repo --strict-model-config=false"]
+          command: ["/bin/sh", "-c"]
+          args: ["/opt/tritonserver/bin/tritonserver --model-repository=/workspace/triton_repo --strict-model-config=false"]
             # nodeSelector:
             #   tag: gpu_worker
 
@@ -52,7 +52,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: triton-custom
-  namespace: triton 
+  namespace: monitoring
   labels:
     app: triton-custom
 spec:
@@ -74,5 +74,5 @@ spec:
       name: metrics
       targetPort: 8002
       nodePort: 32002
-  type: LoadBalancer
+  type: LoadBalancer 
   loadBalancerIP: 192.168.0.100
