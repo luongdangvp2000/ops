@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller
+  namespace: vss-0-1-0
+  labels:
+    app: controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: controller
+  template:
+    metadata:
+      labels:
+        app: controller
+    spec:
+      volumes:
+      - name: storage
+        hostPath:
+          path: /mnt/data/bangpc/nfs_storage/vss/vss-controller 
+      containers:
+        - name: controller
+          ports:
+          - containerPort: 8000
+            name: http
+          image: "controller-test-api:23-01"
+          env:
+            - name: CONTROLLER_PORT
+              value: "8000"
+            - name: DB_NAME
+              value: "vss-0-1-0"
+          volumeMounts:
+          - mountPath: /vss-controller
+            name: storage
+          command: ["/bin/sh", "-c"]
+          args: ["cd /vss-controller && python3 vss_controller/main.py"]
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: controller
+  namespace: vss-0-1-0
+  labels:
+    app: controller
+spec:
+  selector:
+    app: controller
+  ports:
+    - protocol: TCP
+      port: 8000
+      name: http
+      targetPort: 8000
+      nodePort: 31111
+  type: NodePort
+  # loadBalancerIP: 192.168.0.101

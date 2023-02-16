@@ -18,7 +18,7 @@ global:
   imagePullSecrets: []
   storageClass: "nfs-client"
   redis:
-    password: ""
+    password: "123456a@"
 
 ## @section Redis&reg; Cluster Common parameters
 ##
@@ -183,7 +183,7 @@ usePassword: true
 ## Defaults to a random 10-character alphanumeric string if not set and usePassword is true
 ## ref: https://github.com/bitnami/containers/tree/main/bitnami/redis#setting-the-server-password-on-first-run
 ##
-password: ""
+password: "123456a@"
 ## @param existingSecret Name of existing secret object (for password authentication)
 ##
 existingSecret: ""
@@ -252,7 +252,7 @@ service:
   ## Setting this to LoadBalancer may require corresponding service annotations for loadbalancer creation to succeed.
   ## Currently supported types are ClusterIP (default) and LoadBalancer
   ##
-  type: ClusterIP
+  type: LoadBalancer
   ## @param service.clusterIP Service Cluster IP
   ## e.g.:
   ## clusterIP: None
@@ -807,7 +807,7 @@ cluster:
 metrics:
   ## @param metrics.enabled Start a side-car prometheus exporter
   ##
-  enabled: false
+  enabled: true
   ## @param metrics.image.registry Redis&reg; exporter image registry
   ## @param metrics.image.repository Redis&reg; exporter image name
   ## @param metrics.image.tag Redis&reg; exporter image tag
