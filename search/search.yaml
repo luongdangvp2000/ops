@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: search
-  namespace: vss-dev 
+  namespace: vss-0-1-0
   labels:
     app: search
 spec:
@@ -18,22 +18,20 @@ spec:
       volumes:
       - name: search
         hostPath:
-          path: /mnt/data/bangpc/vss_dev/vss-search
+          path: /mnt/data/bangpc/nfs_storage/vss/vss-search
       containers:
         - name: search
           ports:
           - containerPort: 6000
             name: http
-          image: search-cu112-py39:latest
-            #"thienpn/vss-search:22.12-search-0.1"
-          imagePullPolicy: IfNotPresent
+          image: "thienpn/vss-search:22.12-search-0.1"
           env:
             - name: DB_HOST
-              value: "192.168.20.132:27017"
+              value: "192.168.0.171:27017"
             - name: DB_NAME
               value: "vss-0-1-0"
             - name: S3_ENDPOINT_URL
-              value: "192.168.20.133:9000"
+              value: "192.168.0.171:9000"
             - name: SEARCH_PORT
               value: "6000"
           volumeMounts:
@@ -48,7 +46,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: search
-  namespace: vss-dev 
+  namespace: vss-0-1-0
   labels:
     app: search
 spec:
@@ -59,6 +57,6 @@ spec:
       port: 6000
       name: http
       targetPort: 6000
-      nodePort: 31103
+      nodePort: 32003
   type: NodePort
   # loadBalancerIP: 192.168.0.101
