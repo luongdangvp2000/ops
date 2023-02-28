@@ -18,7 +18,7 @@ global:
   imagePullSecrets: []
   storageClass: "nfs-client"
   redis:
-    password: ""
+    password: "123456a@"
 
 ## @section Redis&reg; Cluster Common parameters
 ##
@@ -252,7 +252,7 @@ service:
   ## Setting this to LoadBalancer may require corresponding service annotations for loadbalancer creation to succeed.
   ## Currently supported types are ClusterIP (default) and LoadBalancer
   ##
-  type: ClusterIP
+  type: LoadBalancer
   ## @param service.clusterIP Service Cluster IP
   ## e.g.:
   ## clusterIP: None
@@ -604,7 +604,8 @@ redis:
   ## @param redis.nodeSelector Node labels for Redis&reg; pods assignment
   ## ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    net: public
   ## @param redis.tolerations Tolerations for Redis&reg; pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
@@ -700,7 +701,8 @@ updateJob:
   ## @param updateJob.nodeSelector Node labels for update job pods assignment
   ## ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    net: public
   ## @param updateJob.tolerations Tolerations for update job pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
@@ -807,7 +809,7 @@ cluster:
 metrics:
   ## @param metrics.enabled Start a side-car prometheus exporter
   ##
-  enabled: false
+  enabled: true
   ## @param metrics.image.registry Redis&reg; exporter image registry
   ## @param metrics.image.repository Redis&reg; exporter image name
   ## @param metrics.image.tag Redis&reg; exporter image tag

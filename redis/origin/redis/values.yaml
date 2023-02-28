@@ -107,7 +107,7 @@ image:
 
 ## @param architecture Redis&reg; architecture. Allowed values: `standalone` or `replication`
 ##
-architecture: replication
+architecture: standalone #replication
 ## Redis&reg; Authentication parameters
 ## ref: https://github.com/bitnami/containers/tree/main/bitnami/redis#setting-the-server-password-on-first-run
 ##
@@ -346,7 +346,8 @@ master:
   ## @param master.nodeSelector Node labels for Redis&reg; master pods assignment
   ## ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
-  nodeSelector: {}
+  nodeSelector: 
+    kubernetes.io/hostname: aiserver-197 
   ## @param master.tolerations Tolerations for Redis&reg; master pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
@@ -420,7 +421,8 @@ master:
     ## @param master.persistence.path The path the volume will be mounted at on Redis&reg; master containers
     ## NOTE: Useful when using different Redis&reg; images
     ##
-    path: /media/Data/bangpc/k8s_volume
+    path: "/mnt/data/bangpc/k8s_storage"
+    #/media/Data/bangpc/k8s_volume
     ## @param master.persistence.subPath The subdirectory of the volume to mount on Redis&reg; master containers
     ## NOTE: Useful in dev environments
     ##
@@ -463,7 +465,7 @@ master:
   service:
     ## @param master.service.type Redis&reg; master service type
     ##
-    type: ClusterIP
+    type: NodePort
     ## @param master.service.ports.redis Redis&reg; master service port
     ##
     ports:
@@ -832,7 +834,8 @@ replica:
     ##  @param replica.persistence.path The path the volume will be mounted at on Redis&reg; replicas containers
     ## NOTE: Useful when using different Redis&reg; images
     ##
-    path: /media/Data/bangpc/k8s_volume
+    path: "/mnt/data/bangpc/k8s_storage"
+    #/media/Data/bangpc/k8s_volume
     ## @param replica.persistence.subPath The subdirectory of the volume to mount on Redis&reg; replicas containers
     ## NOTE: Useful in dev environments
     ##
@@ -875,7 +878,7 @@ replica:
   service:
     ## @param replica.service.type Redis&reg; replicas service type
     ##
-    type: ClusterIP
+    type: NodePort
     ## @param replica.service.ports.redis Redis&reg; replicas service port
     ##
     ports:
@@ -971,7 +974,7 @@ sentinel:
   ## IMPORTANT: this will disable the master and replicas services and
   ## create a single Redis&reg; service exposing both the Redis and Sentinel ports
   ##
-  enabled: true
+  enabled: false
   ## Bitnami Redis&reg; Sentinel image version
   ## ref: https://hub.docker.com/r/bitnami/redis-sentinel/tags/
   ## @param sentinel.image.registry Redis&reg; Sentinel image registry
@@ -1528,7 +1531,7 @@ metrics:
   service:
     ## @param metrics.service.type Redis&reg; exporter service type
     ##
-    type: ClusterIP
+    type: NodePort
     ## @param metrics.service.port Redis&reg; exporter service port
     ##
     port: 9121
